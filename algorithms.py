@@ -23,7 +23,8 @@ def colourProfiles(n):
 
     return name, hsv_lower, hsv_upper
 
-
+def identifydefectscope_nitrile():
+    pass
 def identifyDefectType(gloveType, defectParams):
 
     pass
