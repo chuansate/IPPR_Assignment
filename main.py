@@ -8,8 +8,9 @@ medicalGlove1 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain
 medicalGlove2 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_2.jpeg")
 medicalGlove3 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_3.jpeg")
 nitrileGlove1 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 1.jpg")
-nitrileGlove2 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 1.jpg")
-nitrileGlove3 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 2.jpg")
+nitrileGlove2 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 2.jpg")
+nitrileGlove3 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 1.jpg")
+nitrileGlove4 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 2.jpg")
 
 siliconeGlove1 = cv2.imread("Glove_images/silicone/mould/mould_1.jpeg")
 siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
@@ -28,6 +29,7 @@ def main():
     print(identifyGloveType(nitrileGlove1, totalGloveType))
     print(identifyGloveType(nitrileGlove2, totalGloveType))
     print(identifyGloveType(nitrileGlove3, totalGloveType))
+    print(identifyGloveType(nitrileGlove4, totalGloveType))
     print(identifyGloveType(siliconeGlove1, totalGloveType))
     print(identifyGloveType(siliconeGlove2, totalGloveType))
 

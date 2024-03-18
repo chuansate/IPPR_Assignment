@@ -59,7 +59,6 @@ def get_hsv_range(img):
 # To adjust the track bar until the binary mask shows all the wanted parts in white, otherwise in black.
 # Then, record the HSV lower and upper range, and encode them into `algorithms.py`
 def get_hsv_range_with_morphological_operations(img):
-    originalImg = img.copy()
     cv2.namedWindow("TrackBars Window")
     cv2.resizeWindow("TrackBars Window", 640, 240)
     cv2.createTrackbar("Hue Min", "TrackBars Window", 0, 179, empty)
@@ -83,6 +82,8 @@ def get_hsv_range_with_morphological_operations(img):
         # "imgHSV" is an input image (equivalent to a 3D array).
         # `inRange()` is to create a mask for an image, where the wanted parts are in white while the unwanted parts are in black
         mask = cv2.inRange(imgHSV, lower, upper)
+        kernel = np.ones((3, 3), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
         imgContours = img.copy()
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         cv2.drawContours(imgContours, contours, -1, (0, 255, 0), 3)

@@ -2,15 +2,11 @@
 Algorithms to process the images
 """
 import cv2
-
+import numpy as np
 
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
-        # OLD ENCODING
-        # name = "medical glove"
-        # hsv_lower = (99, 34, 47)
-        # hsv_upper = (163, 255, 255)
         name = "medical glove"
         hsv_lower = (99, 152, 41)
         hsv_upper = (114, 255, 235)
@@ -47,6 +43,8 @@ def identifyGloveType(img, totalGloveType):
         # wanted parts are in white
         # unwanted parts are in black
         mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
+        kernel = np.ones((3, 3), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         # -1 signifies drawing all contours
         gloveTypeContourCounts.append(len(contours))
