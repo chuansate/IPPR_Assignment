@@ -7,9 +7,13 @@ import cv2
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
+        # OLD ENCODING
+        # name = "medical glove"
+        # hsv_lower = (99, 34, 47)
+        # hsv_upper = (163, 255, 255)
         name = "medical glove"
-        hsv_lower = (99, 34, 47)
-        hsv_upper = (163, 255, 255)
+        hsv_lower = (99, 152, 41)
+        hsv_upper = (114, 255, 235)
 
     elif n == 1:
         name = "nitrile glove"
