@@ -26,6 +26,8 @@ def colourProfiles(n):
 
 
 def identifyDefectType_MedicalGlove(img):
+    # to remove the wrinkles on the gloves with holes and missing finger
+    img = cv2.GaussianBlur(img, (21, 21), 0)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gloveName, hsv_lower, hsv_higher = colourProfiles(0)
@@ -33,33 +35,51 @@ def identifyDefectType_MedicalGlove(img):
     mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
     kernel = np.ones((3, 3), np.uint8)
     mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    # "bitwise_and" is to display the wanted part in its original color while the unwanted part will be displayed in black
-    wantedParts = cv2.bitwise_and(img, img, mask=mask)
-
+    edges = cv2.Canny(mask, 30, 100)
     # Assuming the glove is the largest connected component
     # the defect is juz the second-largest blobs
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # `cv2.RETR_TREE` retrieves all the contours and creates a full family hierarchy list
+    contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)
     glove_contour = contours[0]
     glove_mask = np.zeros_like(gray)
+
     # drawing the glove contour, thickness=-1 means filling the glove
-    cv2.drawContours(glove_mask, [glove_contour], -1, 255, thickness=-1)
+    # cv2.drawContours(glove_mask, [glove_contour], -1, 255, thickness=-1)
+
+    # Filter contours based on area (you can adjust the threshold)
+    # for contour in contours:
+    #     area = cv2.contourArea(contour)
+    #     if area < 1000:  # Adjust this threshold as needed
+    #         hole_contours.append(contour)
 
     # do the filtering on second-largest blob based on circularity, area, maybe aspect ratio?
     # the threshold is again gotten thru trackbars, then encode them!
+    print("len of contours = ", len(contours))
+
+    # refer https://docs.opencv.org/4.x/d9/d8b/tutorial_py_contours_hierarchy.html
+    print("hierarchy = ", hierarchy)
+    if len(contours) >= 2:
+        # dirty and stain analysis + hole analysis
+        hole_contour = contours[2]  # filter the blobs based on areas to see which one is hole
+        cv2.drawContours(img, [hole_contour], -1, (0, 255, 0), 3)
+        cv2.imshow("Glove with hole", img)
+        cv2.waitKey(0)
+    elif len(contours) == 1:
+        # missing finger analysis
+        print("Missing finger!")
+    else:
+        # no contour, means don't belong to any defect type
+        print("Unknown defect type!")
 
 
-
-    cv2.imshow("Wanted parts", wantedParts)
-    cv2.imshow("Mask", mask)
-    cv2.imshow("Glove mask", glove_mask)
+    # cv2.imshow("Wanted parts", wantedParts)
+    # cv2.imshow("Mask", mask)
+    # cv2.imshow("Glove mask", glove_mask)
     cv2.waitKey(0)
 
 
 def identifyGloveType(img, totalGloveType):
-    # encode params of each type of glove here....
-    # then scan thru to see which class suits the most....
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     gloveTypeNames = []
     gloveTypeContourCounts = []
