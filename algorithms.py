@@ -4,6 +4,7 @@ Algorithms to process the images
 import cv2
 import numpy as np
 
+
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
@@ -24,9 +25,36 @@ def colourProfiles(n):
     return name, hsv_lower, hsv_upper
 
 
-def identifyDefectType(gloveType, defectParams):
+def identifyDefectType_MedicalGlove(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gloveName, hsv_lower, hsv_higher = colourProfiles(0)
+    # create a binary mask where: wanted parts are in white, unwanted parts are in black
+    mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
+    kernel = np.ones((3, 3), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
+    contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    # "bitwise_and" is to display the wanted part in its original color while the unwanted part will be displayed in black
+    wantedParts = cv2.bitwise_and(img, img, mask=mask)
 
-    pass
+    # Assuming the glove is the largest connected component
+    # the defect is juz the second-largest blobs
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)
+    glove_contour = contours[0]
+    glove_mask = np.zeros_like(gray)
+    # drawing the glove contour, thickness=-1 means filling the glove
+    cv2.drawContours(glove_mask, [glove_contour], -1, 255, thickness=-1)
+
+    # do the filtering on second-largest blob based on circularity, area, maybe aspect ratio?
+    # the threshold is again gotten thru trackbars, then encode them!
+
+
+
+    cv2.imshow("Wanted parts", wantedParts)
+    cv2.imshow("Mask", mask)
+    cv2.imshow("Glove mask", glove_mask)
+    cv2.waitKey(0)
 
 
 def identifyGloveType(img, totalGloveType):
@@ -39,9 +67,7 @@ def identifyGloveType(img, totalGloveType):
     for gloveTypeIndex in range(totalGloveType):
         gloveName, hsv_lower, hsv_higher = colourProfiles(gloveTypeIndex)
         gloveTypeNames.append(gloveName)
-        # create a binary mask where:
-        # wanted parts are in white
-        # unwanted parts are in black
+        # create a binary mask where: wanted parts are in white, unwanted parts are in black
         mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
         kernel = np.ones((3, 3), np.uint8)
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
