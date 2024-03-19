@@ -4,6 +4,7 @@ Algorithms to process the images
 import cv2
 import numpy as np
 
+
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
@@ -20,6 +21,11 @@ def colourProfiles(n):
         name = "silicone glove"
         hsv_lower = (154, 36, 100)
         hsv_upper = (178, 116, 220)
+
+    elif n == 3:
+        name = "fabric glove"
+        hsv_lower = (13, 17, 150)
+        hsv_upper = (22, 88, 245)
 
     return name, hsv_lower, hsv_upper
 
@@ -44,7 +50,7 @@ def identifyGloveType(img, totalGloveType):
         # unwanted parts are in black
         mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
         kernel = np.ones((3, 3), np.uint8)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
         contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         # -1 signifies drawing all contours
         gloveTypeContourCounts.append(len(contours))
