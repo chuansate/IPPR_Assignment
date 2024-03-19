@@ -33,6 +33,34 @@ def main():
     print(identifyGloveType(siliconeGlove1, totalGloveType))
     print(identifyGloveType(siliconeGlove2, totalGloveType))
 
+    holes_in_nitrile_glove1 = identify_fingertipholes_in_glove(nitrileGlove1)
+    print(f"Detected {len(holes_in_nitrile_glove1)} holes in nitrileGlove1.")
+
+    holes_in_nitrile_glove2 = identify_fingertipholes_in_glove(nitrileGlove2)
+    print(f"Detected {len(holes_in_nitrile_glove2)} holes in nitrileGlove2.")
+
+    holes_in_nitrile_glove3 = identify_fingertipholes_in_glove(nitrileGlove3)
+    print(f"Detected {len(holes_in_nitrile_glove3)} holes in nitrileGlove3.")
+
+    # After identifying the glove type, check for fingertip stains if it's a nitrile glove
+    # Example for one image:
+    gloveType = identifyGloveType(nitrileGlove1, totalGloveType)
+    if gloveType == "nitrile glove":
+        defects_info = identifyStain(gloveType, nitrileGlove1)
+        print(defects_info)
+    # Do the same for all other images
+
+    # Add to main.py within the main() function
+
+    # Add the HSV range for black or the color of the holes/background
+    hsv_lower_holes = (0, 0, 0)
+    hsv_upper_holes = (180, 255, 30)  # Adjust this based on your actual background color
+
+    # Assume that the identify_holes function is already imported
+    # Call the identify_holes function for each nitrile glove image
+    mask, holes = identify_holes(nitrileGlove1, hsv_lower_holes, hsv_upper_holes)
+    # Do something with the mask and holes, like counting them or highlighting them
+
 
 if __name__ == "__main__":
     main()

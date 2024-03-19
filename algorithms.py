@@ -25,6 +25,97 @@ def colourProfiles(n):
 
 def identifydefectscope_nitrile():
     pass
+
+
+def identify_fingertipholes_in_glove(image_path):
+    img = cv2.imread(image_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    # Start with a lower threshold that just starts to capture the holes
+    thresh_level = 180  # Adjust based on the image histogram
+    _, thresh = cv2.threshold(blur, thresh_level, 255, cv2.THRESH_BINARY_INV)
+
+    # Find contours
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # You'll need to adjust these based on the actual size of the holes in pixels
+    min_area = 100  # Minimum area of a hole in pixels
+    max_area = 1000  # Maximum area of a hole in pixels
+    holes = [cnt for cnt in contours if min_area < cv2.contourArea(cnt) < max_area]
+
+    # Draw contours
+    cv2.drawContours(img, holes, -1, (0, 255, 0), 3)
+    cv2.imshow('Detected Holes', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    # Return the number of holes detected
+    return len(holes)
+
+
+def identifyStain(gloveType, img):
+    if gloveType != "nitrile glove":
+        return "No nitrile glove detected."
+
+    # Convert image to HSV color space
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # Define HSV range for the stain color (you may need to tune this)
+    stain_lower_hsv = np.array([100, 50, 50])
+    stain_upper_hsv = np.array([140, 255, 255])
+
+    # Create a mask for the stain color
+    stain_mask = cv2.inRange(hsv, stain_lower_hsv, stain_upper_hsv)
+
+    # Find contours of the stains
+    contours, _ = cv2.findContours(stain_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Filter contours based on size or other properties
+    defects = []
+    for cnt in contours:
+        area = cv2.contourArea(cnt)
+        if area > 50:  # you may need to adjust this threshold
+            defects.append(cnt)
+
+    # Return the number of defects (stains)
+    num_defects = len(defects)
+
+    # If needed, draw contours on the image for visualization
+    for cnt in defects:
+        cv2.drawContours(img, [cnt], 0, (0, 0, 255), 3)
+    cv2.imshow('Detected Stains', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+    # Return the count of stains detected
+    return f"Detected {num_defects} fingertip stains on the nitrile glove."
+
+
+# Add to algorithms.py
+
+def identify_holes(img, hsv_lower, hsv_upper):
+    # Convert the image to the HSV color space
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # Create a mask for the color of the holes (assuming the holes will show the black background)
+    # The lower and upper HSV values may need to be tuned
+    mask = cv2.inRange(hsv, hsv_lower, hsv_upper)
+
+    # Optional: Perform morphological operations to clean up the mask
+    kernel = np.ones((5, 5), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+
+    # Find contours of the holes
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Filter out small contours that are not holes
+    holes = [cnt for cnt in contours if cv2.contourArea(cnt) > 100]  # threshold may need tuning
+
+    # Return the mask and the contours of the holes
+    return mask, holes
+
+
 def identifyDefectType(gloveType, defectParams):
 
     pass

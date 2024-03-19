@@ -103,7 +103,10 @@ def get_hsv_range_with_morphological_operations(img):
 
 # get_hsv_range(siliconeGlove1)
 # get_hsv_range(siliconeGlove2)
-# get_hsv_range(nitrileGlove1)
+# get_hsv_range(nitrileGlove1) # Assuming 'nitrileGlove1' is a variable holding the image of a nitrile glove
 # get_hsv_range(nitrileGlove2)
 # get_hsv_range(medicalGlove1)
 # get_hsv_range(medicalGlove2)
+
+
+
