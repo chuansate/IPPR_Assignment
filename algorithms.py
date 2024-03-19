@@ -30,9 +30,9 @@ def colourProfiles(n):
     return name, hsv_lower, hsv_upper
 
 
-def identifyDefectType_MedicalGlove(img):
+def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialTearArea, maxPartialTearArea):
     # to remove the wrinkles on the gloves with holes and missing finger
-    img = cv2.GaussianBlur(img, (21, 21), 0)
+    img = cv2.GaussianBlur(img, (15, 15), 0)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gloveName, hsv_lower, hsv_higher = colourProfiles(0)
@@ -44,7 +44,7 @@ def identifyDefectType_MedicalGlove(img):
     # Assuming the glove is the largest connected component
     # the defect is juz the second-largest blobs
     # `cv2.RETR_TREE` retrieves all the contours and creates a full family hierarchy list
-    contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = sorted(contours, key=cv2.contourArea, reverse=True)
     glove_contour = contours[0]
     glove_mask = np.zeros_like(gray)
@@ -60,22 +60,36 @@ def identifyDefectType_MedicalGlove(img):
 
     # do the filtering on second-largest blob based on circularity, area, maybe aspect ratio?
     # the threshold is again gotten thru trackbars, then encode them!
-    print("len of contours = ", len(contours))
-
-    # refer https://docs.opencv.org/4.x/d9/d8b/tutorial_py_contours_hierarchy.html
-    print("hierarchy = ", hierarchy)
     if len(contours) >= 2:
-        # dirty and stain analysis + hole analysis
-        hole_contour = contours[2]  # filter the blobs based on areas to see which one is hole
-        cv2.drawContours(img, [hole_contour], -1, (0, 255, 0), 3)
-        cv2.imshow("Glove with hole", img)
-        cv2.waitKey(0)
+        dirty_contour = None
+        partialTear_contour = None
+        for i in range(1, len(contours)):
+            cnt = contours[i]
+            cntArea = cv2.contourArea(cnt)
+            print("cntArea = ", cntArea)
+            if minDirtyArea <= cntArea <= maxDirtyArea:
+                dirty_contour = cnt
+                break
+            elif minPartialTearArea <= cntArea <= maxPartialTearArea:
+                partialTear_contour = cnt
+                break
+        if dirty_contour is not None:
+            cv2.drawContours(img, [dirty_contour], -1, (0, 255, 0), 3)
+            cv2.imshow("Img with dirty detected", img)
+        else:
+            print("No dirty is detected!")
+
+        if partialTear_contour is not None:
+            cv2.drawContours(img, [partialTear_contour], -1, (0, 255, 0), 3)
+            cv2.imshow("Img with partial tear detected", img)
+        else:
+            print("No partial tear is detected!")
+
     elif len(contours) == 1:
-        # missing finger analysis
-        print("Missing finger!")
+        print("Fingertip tear!")
+
     else:
-        # no contour, means don't belong to any defect type
-        print("Unknown defect type!")
+        print("Unknown defect type, no glove detected!")
 
 
     # cv2.imshow("Wanted parts", wantedParts)

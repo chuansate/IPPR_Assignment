@@ -22,19 +22,24 @@ totalGloveType = 4
 
 
 def main():
-
     print(identifyGloveType(medicalGlove1, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove1)
+    identifyDefectType_MedicalGlove(medicalGlove1, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620,
+                                    maxPartialTearArea=625)
     print(identifyGloveType(medicalGlove2, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove2)
-    print(identifyGloveType(medicalGlove3, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove3)
-    print(identifyGloveType(medicalGlove4, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove4)
+    identifyDefectType_MedicalGlove(medicalGlove2, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620,
+                                    maxPartialTearArea=625)
     print(identifyGloveType(medicalGlove5, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove5)
+    identifyDefectType_MedicalGlove(medicalGlove5, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620, maxPartialTearArea=625)
     print(identifyGloveType(medicalGlove6, totalGloveType))
-    identifyDefectType_MedicalGlove(medicalGlove6)
+    identifyDefectType_MedicalGlove(medicalGlove6, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620, maxPartialTearArea=625)
+    # print(identifyGloveType(medicalGlove3, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove3)
+    # print(identifyGloveType(medicalGlove4, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove4)
+    # print(identifyGloveType(medicalGlove5, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove5)
+    # print(identifyGloveType(medicalGlove6, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove6)
 
 
 if __name__ == "__main__":
