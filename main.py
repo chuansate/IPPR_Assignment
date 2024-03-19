@@ -13,10 +13,6 @@ siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
 siliconeGlove3 = cv2.imread("Glove_images/silicone/mould/mould_3.jpeg")
 fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
 fabricGlove2 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains2.jpg")
-# DUN USE FABRIC GLOVE!!
-# fabric glove is in white, and the medical glove's background is in white too, hence medical glove will be recognized as fabric!
-# fabricGlove1 = cv2.imread("Glove_images/Fabric_gloves/stain/CLOTH STAIN 1.jpg")
-# fabricGlove2 = cv2.imread("Glove_images/Fabric_gloves/stain/CLOTH STAIN 2.jpg")
 
 totalGloveType = 4
 
