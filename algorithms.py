@@ -48,25 +48,12 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
     contours = sorted(contours, key=cv2.contourArea, reverse=True)
     glove_contour = contours[0]
     glove_mask = np.zeros_like(gray)
-
-    # drawing the glove contour, thickness=-1 means filling the glove
-    # cv2.drawContours(glove_mask, [glove_contour], -1, 255, thickness=-1)
-
-    # Filter contours based on area (you can adjust the threshold)
-    # for contour in contours:
-    #     area = cv2.contourArea(contour)
-    #     if area < 1000:  # Adjust this threshold as needed
-    #         hole_contours.append(contour)
-
-    # do the filtering on second-largest blob based on circularity, area, maybe aspect ratio?
-    # the threshold is again gotten thru trackbars, then encode them!
     if len(contours) >= 2:
         dirty_contour = None
         partialTear_contour = None
         for i in range(1, len(contours)):
             cnt = contours[i]
             cntArea = cv2.contourArea(cnt)
-            print("cntArea = ", cntArea)
             if minDirtyArea <= cntArea <= maxDirtyArea:
                 dirty_contour = cnt
                 break
@@ -76,26 +63,37 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
         if dirty_contour is not None:
             cv2.drawContours(img, [dirty_contour], -1, (0, 255, 0), 3)
             cv2.imshow("Img with dirty detected", img)
-        else:
-            print("No dirty is detected!")
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            return "Dirty"
 
         if partialTear_contour is not None:
             cv2.drawContours(img, [partialTear_contour], -1, (0, 255, 0), 3)
             cv2.imshow("Img with partial tear detected", img)
-        else:
-            print("No partial tear is detected!")
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            return "Partial tear"
+
+        if dirty_contour is None and partialTear_contour is None:
+            # then we can determine based on the difference of area betw first largest and second largest
+            # or maybe based on aspect ratio, circularity, other geometric measures
+            cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
+            cv2.imshow("Img with fingertip tear detected", img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+            return "Fingertip tear"
 
     elif len(contours) == 1:
-        print("Fingertip tear!")
+        cv2.drawContours(img, [contours], -1, (0, 255, 0), 3)
+        cv2.imshow("Img with fingertip tear detected", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+        return "Fingertip tear"
 
     else:
-        print("Unknown defect type, no glove detected!")
+        return "Unknown defect type"
 
-
-    # cv2.imshow("Wanted parts", wantedParts)
-    # cv2.imshow("Mask", mask)
-    # cv2.imshow("Glove mask", glove_mask)
-    cv2.waitKey(0)
 
 
 def identifyGloveType(img, totalGloveType):
@@ -120,10 +118,7 @@ def identifyGloveType(img, totalGloveType):
             gloveTypeContourAreas.append(0)
         imgCopy = img.copy()
         cv2.drawContours(imgCopy, contours, -1, (0, 255, 0), 3)
-        cv2.imshow(gloveName, imgCopy)
-        cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    print("gloveTypeContourCounts = ", gloveTypeContourCounts)
+
     countOf1 = 0
     indexesOf1_gloveTypeContourCounts = []
     # if there is a 1 only in gloveTypeContourCounts, return the index!
