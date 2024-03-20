@@ -61,22 +61,33 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
                 partialTear_contour = cnt
                 break
         if dirty_contour is not None:
+            cv2.putText(img, 'Glove Type = Medical Glove', (30, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Defect Type = Dirty', (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
             cv2.drawContours(img, [dirty_contour], -1, (0, 255, 0), 3)
             cv2.imshow("Img with dirty detected", img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-            return "Dirty"
+
 
         if partialTear_contour is not None:
+            cv2.putText(img, 'Glove Type = Medical Glove', (30, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Defect Type = Partial Tear', (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
             cv2.drawContours(img, [partialTear_contour], -1, (0, 255, 0), 3)
             cv2.imshow("Img with partial tear detected", img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-            return "Partial tear"
 
         if dirty_contour is None and partialTear_contour is None:
             # then we can determine based on the difference of area betw first largest and second largest
             # or maybe based on aspect ratio, circularity, other geometric measures
+            cv2.putText(img, 'Glove Type = Medical Glove', (30, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'Defect Type = Fingertip tear', (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                        1, (255, 0, 0), 2, cv2.LINE_AA)
             cv2.drawContours(img, contours, -1, (0, 255, 0), 3)
             cv2.imshow("Img with fingertip tear detected", img)
             cv2.waitKey(0)
@@ -85,6 +96,10 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
             return "Fingertip tear"
 
     elif len(contours) == 1:
+        cv2.putText(img, 'Glove Type = Medical Glove', (30, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                    1, (255, 0, 0), 2, cv2.LINE_AA)
+        cv2.putText(img, 'Defect Type = Fingertip tear', (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                    1, (255, 0, 0), 2, cv2.LINE_AA)
         cv2.drawContours(img, [contours], -1, (0, 255, 0), 3)
         cv2.imshow("Img with fingertip tear detected", img)
         cv2.waitKey(0)
@@ -93,7 +108,6 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
 
     else:
         return "Unknown defect type"
-
 
 
 def identifyGloveType(img, totalGloveType):
