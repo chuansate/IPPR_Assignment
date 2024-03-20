@@ -30,7 +30,7 @@ def colourProfiles(n):
     return name, hsv_lower, hsv_upper
 
 
-def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialTearArea, maxPartialTearArea):
+def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialTearArea, maxPartialTearArea, minDirtyEcc, maxDirtyEcc, minPartialTearEcc, maxPartialTearEcc):
     # to remove the wrinkles on the gloves with holes and missing finger
     img = cv2.GaussianBlur(img, (15, 15), 0)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -54,10 +54,19 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
         for i in range(1, len(contours)):
             cnt = contours[i]
             cntArea = cv2.contourArea(cnt)
-            if minDirtyArea <= cntArea <= maxDirtyArea:
+            eccentricity = 0
+            if len(cnt) >= 5: # FitEllipse requires at least 5 points
+                ellipse = cv2.fitEllipse(cnt)
+                # Extract the lengths of the major and minor axes
+                major_axis = max(ellipse[1])
+                minor_axis = min(ellipse[1])
+                # Calculate the eccentricity of the ellipse
+                eccentricity = (major_axis - minor_axis) / major_axis
+
+            if minDirtyArea <= cntArea <= maxDirtyArea and minDirtyEcc <= eccentricity <= maxDirtyEcc:
                 dirty_contour = cnt
                 break
-            elif minPartialTearArea <= cntArea <= maxPartialTearArea:
+            elif minPartialTearArea <= cntArea <= maxPartialTearArea and minPartialTearEcc <= eccentricity <= maxPartialTearEcc:
                 partialTear_contour = cnt
                 break
         if dirty_contour is not None:
@@ -69,7 +78,6 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
             cv2.imshow("Img with dirty detected", img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
-
 
         if partialTear_contour is not None:
             cv2.putText(img, 'Glove Type = Medical Glove', (30, 50), cv2.FONT_HERSHEY_SIMPLEX,

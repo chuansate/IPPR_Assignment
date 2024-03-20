@@ -23,7 +23,7 @@ totalGloveType = 4
 
 def identifyDefectType(img, gloveTypeName):
     if gloveTypeName == "medical glove":
-        identifyDefectType_MedicalGlove(img, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620, maxPartialTearArea=625)
+        identifyDefectType_MedicalGlove(img, minDirtyArea=1420, maxDirtyArea=1450, minPartialTearArea=620, maxPartialTearArea=625, minDirtyEcc=0.54, maxDirtyEcc=0.58, minPartialTearEcc=0.43, maxPartialTearEcc=0.48)
     elif gloveTypeName == "nitrile glove":
         pass
     elif gloveTypeName == "silicone glove":
