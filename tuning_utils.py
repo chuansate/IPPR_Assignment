@@ -6,12 +6,23 @@
 import cv2
 import numpy as np
 
-medicalGlove1 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_1.jpeg")
-medicalGlove2 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_2.jpeg")
-nitrileGlove1 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 1.jpg")
-nitrileGlove2 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 1.jpg")
+medicalGlove1 = cv2.imread("Glove_images/medical/dirty/dirty1.jpeg")
+medicalGlove2 = cv2.imread("Glove_images/medical/dirty/dirty2.jpeg")
+nitrileGlove1 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 1.jpg")
+nitrileGlove2 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 2.jpg")
+nitrileGlove3 = cv2.imread("Glove_images/nitrile/fingertip_stain/NITRILE FINGER STAIN 1.jpg")
+nitrileGlove4 = cv2.imread("Glove_images/nitrile/fingertip_stain/NITRILE FINGER STAIN 2.jpg")
+nitrileGlove5 = cv2.imread("Glove_images/nitrile/hole/NITRILE HOLE 1.jpg")
+nitrileGlove6 = cv2.imread("Glove_images/nitrile/hole/NITRILE HOLE 2.jpg")
+nitrileGlove7 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 1.jpg")
+nitrileGlove8 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 2.jpg")
+nitrileGlove9 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 1.jpg")
+nitrileGlove10 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 2.jpg")
 siliconeGlove1 = cv2.imread("Glove_images/silicone/mould/mould_1.jpeg")
 siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
+siliconeGlove3 = cv2.imread("Glove_images/silicone/mould/mould_3.jpeg")
+fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
+fabricGlove2 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains2.jpg")
 
 
 def empty(a):
@@ -103,10 +114,7 @@ def get_hsv_range_with_morphological_operations(img):
 
 # get_hsv_range(siliconeGlove1)
 # get_hsv_range(siliconeGlove2)
-# get_hsv_range(nitrileGlove1) # Assuming 'nitrileGlove1' is a variable holding the image of a nitrile glove
+# get_hsv_range(nitrileGlove1)
 # get_hsv_range(nitrileGlove2)
 # get_hsv_range(medicalGlove1)
 # get_hsv_range(medicalGlove2)
-
-
-

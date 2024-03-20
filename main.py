@@ -4,62 +4,89 @@ Before GUI, we run CLI here!
 """
 from tuning_utils import *
 from algorithms import *
-medicalGlove1 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_1.jpeg")
-medicalGlove2 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_2.jpeg")
-medicalGlove3 = cv2.imread("Glove_images/medical/dirty_and_stain/dirty_and_stain_3.jpeg")
-nitrileGlove1 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 1.jpg")
-nitrileGlove2 = cv2.imread("Glove_images/nitrile/STAIN/NITRILE STAIN 2.jpg")
-nitrileGlove3 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 1.jpg")
-nitrileGlove4 = cv2.imread("Glove_images/nitrile/HOLE/NITRILE HOLE 2.jpg")
+import cv2
 
+medicalGlove1 = cv2.imread("Glove_images/medical/dirty/dirty1.jpeg")
+medicalGlove2 = cv2.imread("Glove_images/medical/dirty/dirty2.jpeg")
+medicalGlove3 = cv2.imread("Glove_images/medical/fingertip_tear/fingertip_tear1.jpeg")
+medicalGlove4 = cv2.imread("Glove_images/medical/fingertip_tear/fingertip_tear2.jpeg")
+medicalGlove5 = cv2.imread("Glove_images/medical/partial_tear/partial_tear1.jpeg")
+medicalGlove6 = cv2.imread("Glove_images/medical/partial_tear/partial_tear2.jpeg")
+nitrileGlove1 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 1.jpg")
+nitrileGlove2 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 2.jpg")
+nitrileGlove3 = cv2.imread("Glove_images/nitrile/fingertip_stain/NITRILE FINGER STAIN 1.jpg")
+nitrileGlove4 = cv2.imread("Glove_images/nitrile/fingertip_stain/NITRILE FINGER STAIN 2.jpg")
+nitrileGlove5 = cv2.imread("Glove_images/nitrile/hole/NITRILE HOLE 1.jpg")
+nitrileGlove6 = cv2.imread("Glove_images/nitrile/hole/NITRILE HOLE 2.jpg")
+nitrileGlove7 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 1.jpg")
+nitrileGlove8 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 2.jpg")
+nitrileGlove9 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 1.jpg")
+nitrileGlove10 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 2.jpg")
 siliconeGlove1 = cv2.imread("Glove_images/silicone/mould/mould_1.jpeg")
 siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
-# DUN USE FABRIC GLOVE!!
-# fabric glove is in white, and the medical glove's background is in white too, hence medical glove will be recognized as fabric!
-# fabricGlove1 = cv2.imread("Glove_images/Fabric_gloves/stain/CLOTH STAIN 1.jpg")
-# fabricGlove2 = cv2.imread("Glove_images/Fabric_gloves/stain/CLOTH STAIN 2.jpg")
+siliconeGlove3 = cv2.imread("Glove_images/silicone/mould/mould_3.jpeg")
+fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
+fabricGlove2 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains2.jpg")
 
-totalGloveType = 3
+totalGloveType = 4
+
+totalGloveType_nitrile = 1
+
+
+def identifyDefectType(img, gloveTypeName):
+    if gloveTypeName == "medical glove":
+       pass
+    elif gloveTypeName == "nitrile glove":
+       identifyDefectTypes_NitrileGlove(img)
+    elif gloveTypeName == "silicone glove":
+        pass
+    elif gloveTypeName == "fabric glove":
+        pass
+    else:
+        print("Unknown glove type!")
 
 
 def main():
-    print(identifyGloveType(medicalGlove1, totalGloveType))
-    print(identifyGloveType(medicalGlove2, totalGloveType))
-    print(identifyGloveType(medicalGlove3, totalGloveType))
-    print(identifyGloveType(nitrileGlove1, totalGloveType))
-    print(identifyGloveType(nitrileGlove2, totalGloveType))
-    print(identifyGloveType(nitrileGlove3, totalGloveType))
-    print(identifyGloveType(nitrileGlove4, totalGloveType))
-    print(identifyGloveType(siliconeGlove1, totalGloveType))
-    print(identifyGloveType(siliconeGlove2, totalGloveType))
 
-    holes_in_nitrile_glove1 = identify_fingertipholes_in_glove(nitrileGlove1)
-    print(f"Detected {len(holes_in_nitrile_glove1)} holes in nitrileGlove1.")
+    gloveTypeName7 = identifyGloveType_nitrile(nitrileGlove1, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove1, gloveTypeName7)
 
-    holes_in_nitrile_glove2 = identify_fingertipholes_in_glove(nitrileGlove2)
-    print(f"Detected {len(holes_in_nitrile_glove2)} holes in nitrileGlove2.")
+    gloveTypeName8 = identifyGloveType_nitrile(nitrileGlove2, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove2, gloveTypeName8)
 
-    holes_in_nitrile_glove3 = identify_fingertipholes_in_glove(nitrileGlove3)
-    print(f"Detected {len(holes_in_nitrile_glove3)} holes in nitrileGlove3.")
+    gloveTypeName9 = identifyGloveType_nitrile(nitrileGlove3, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove3, gloveTypeName9)
 
-    # After identifying the glove type, check for fingertip stains if it's a nitrile glove
-    # Example for one image:
-    gloveType = identifyGloveType(nitrileGlove1, totalGloveType)
-    if gloveType == "nitrile glove":
-        defects_info = identifyStain(gloveType, nitrileGlove1)
-        print(defects_info)
-    # Do the same for all other images
+    gloveTypeName10 = identifyGloveType_nitrile(nitrileGlove4, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove4, gloveTypeName10)
 
-    # Add to main.py within the main() function
+    gloveTypeName11 = identifyGloveType_nitrile(nitrileGlove5, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove5, gloveTypeName11)
 
-    # Add the HSV range for black or the color of the holes/background
-    hsv_lower_holes = (0, 0, 0)
-    hsv_upper_holes = (180, 255, 30)  # Adjust this based on your actual background color
+    gloveTypeName12 = identifyGloveType_nitrile(nitrileGlove6, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove6, gloveTypeName12)
 
-    # Assume that the identify_holes function is already imported
-    # Call the identify_holes function for each nitrile glove image
-    mask, holes = identify_holes(nitrileGlove1, hsv_lower_holes, hsv_upper_holes)
-    # Do something with the mask and holes, like counting them or highlighting them
+    gloveTypeName13 = identifyGloveType_nitrile(nitrileGlove7, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove7, gloveTypeName13)
+
+    gloveTypeName14 = identifyGloveType_nitrile(nitrileGlove8, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove8, gloveTypeName14)
+
+    gloveTypeName15 = identifyGloveType_nitrile(nitrileGlove9, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove9, gloveTypeName15)
+
+    gloveTypeName16 = identifyGloveType_nitrile(nitrileGlove10, totalGloveType_nitrile)
+    identifyDefectType(nitrileGlove10, gloveTypeName16)
+
+
+    # print(identifyGloveType(medicalGlove3, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove3)
+    # print(identifyGloveType(medicalGlove4, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove4)
+    # print(identifyGloveType(medicalGlove5, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove5)
+    # print(identifyGloveType(medicalGlove6, totalGloveType))
+    # identifyDefectType_MedicalGlove(medicalGlove6)
 
 
 if __name__ == "__main__":
