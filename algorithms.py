@@ -34,6 +34,9 @@ def identifyDefectType(gloveType, defectParams):
 
     pass
 
+def identifyDefectType_Silicone_Glove():
+
+    pass
 
 def identifyGloveType(img, totalGloveType):
     # encode params of each type of glove here....
