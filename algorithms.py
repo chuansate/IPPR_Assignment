@@ -48,7 +48,6 @@ def identifyDefectTypes_NitrileGlove(img):
     # Define the range for the color of the glove in HSV
     gloveName, hsv_lower, hsv_upper = ColourProfile(0)
 
-
     # Define the range for the color of the stains in HSV
     lower_hsv_stain = np.array([63, 85, 81])
     upper_hsv_stain = np.array([128, 255, 255])
