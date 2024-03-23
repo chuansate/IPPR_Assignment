@@ -14,8 +14,10 @@ def colourProfiles(n):
 
     elif n == 1:
         name = "nitrile glove"
+        # hsv_lower = (20, 0, 98)
+        # hsv_upper = (78, 130, 238)
         hsv_lower = (20, 0, 98)
-        hsv_upper = (78, 130, 238)
+        hsv_upper = (78, 130, 255)
 
     elif n == 2:
         name = "silicone glove"
@@ -64,7 +66,6 @@ def identifyGloveType(img, totalGloveType):
         cv2.imshow(gloveName, imgCopy)
         cv2.waitKey(0)
     cv2.destroyAllWindows()
-    print("gloveTypeContourCounts = ", gloveTypeContourCounts)
     countOf1 = 0
     indexesOf1_gloveTypeContourCounts = []
     # if there is a 1 only in gloveTypeContourCounts, return the index!
