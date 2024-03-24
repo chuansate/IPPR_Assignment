@@ -10,6 +10,10 @@ medicalGlove1 = cv2.imread("Glove_images/medical/dirty/dirty1.jpeg")
 medicalGlove2 = cv2.imread("Glove_images/medical/dirty/dirty2.jpeg")
 nitrileGlove1 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 1.jpg")
 nitrileGlove2 = cv2.imread("Glove_images/nitrile/stain/NITRILE STAIN 2.jpg")
+nitrileGlove3 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 1.jpg")
+nitrileGlove4 = cv2.imread("Glove_images/nitrile/mix/NITRILE MIX 2.jpg")
+nitrileGlove5 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 1.jpg")
+nitrileGlove6 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 2.jpg")
 siliconeGlove1 = cv2.imread("Glove_images/silicone/mould/mould_1.jpeg")
 siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
 fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
@@ -101,5 +105,5 @@ def get_hsv_range_with_morphological_operations(img):
     cv2.destroyAllWindows()
 
 
-# get_hsv_range_with_morphological_operations(fabricGlove1)
-# get_hsv_range_with_morphological_operations(fabricGlove2)
+# get_hsv_range_with_morphological_operations(nitrileGlove5)
+# get_hsv_range_with_morphological_operations(nitrileGlove6)
