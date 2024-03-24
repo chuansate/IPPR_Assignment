@@ -4,7 +4,6 @@ Algorithms to process the images
 import cv2
 import numpy as np
 
-
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
@@ -29,11 +28,44 @@ def colourProfiles(n):
 
     return name, hsv_lower, hsv_upper
 
+def calculate_shape_factor(contour):
+    area = cv2.contourArea(contour)
+    perimeter = cv2.arcLength(contour, True)
+    shape_factor = (perimeter ** 2) / (4 * np.pi * area)
+    return shape_factor
 
-def identifyDefectType(gloveType, defectParams):
+def identifyDefectType_FabricGlove(image, thresh, minDefect, maxDefect):
+    # preprocessing
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, thresh, 255, cv2.THRESH_BINARY_INV)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    pass
+    # number of defect detection
+    filtered_contours = [cnt for cnt in contours if minDefect < cv2.contourArea(cnt) < maxDefect]
+    num_defects = len(filtered_contours)
+    shape_factor = 0
+    print('Number of defects:', num_defects)
+    for defect in filtered_contours:
+        shape_factor = calculate_shape_factor(defect)
+        print('Shape factor:', shape_factor)
+        cv2.drawContours(image, [defect], -1, (0,255,0), 3)
 
+    # defect identification
+    if shape_factor > 6 and num_defects == 1:
+       defect_type = 'Opening Defect'
+    elif shape_factor > 1 and num_defects > 1:
+        defect_type = 'Multiple Stains Defect'
+    elif shape_factor == 0 and num_defects == 0:
+        defect_type = 'Stitch Defect'
+    
+    # Display results
+    cv2.putText(image, 'Glove Type = Fabric Glove', (5, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                0.6, (0, 234, 255), 2, cv2.LINE_AA)
+    cv2.putText(image, f'Defect Type = {defect_type}', (5, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                0.6, (0, 234, 255), 2, cv2.LINE_AA)
+    cv2.imshow(f'{defect_type} detected', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def identifyGloveType(img, totalGloveType):
     # encode params of each type of glove here....
@@ -87,4 +119,3 @@ def identifyGloveType(img, totalGloveType):
             if count == 0:
                 gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
         return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
-
