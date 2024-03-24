@@ -16,6 +16,9 @@ nitrileGlove5 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER H
 nitrileGlove6 = cv2.imread("Glove_images/nitrile/fingertip_hole/NITRILE FINGER HOLE 2.jpg")
 siliconeGlove1 = cv2.imread("Glove_images/silicone/mould/mould_1.jpeg")
 siliconeGlove2 = cv2.imread("Glove_images/silicone/mould/mould_2.jpeg")
+siliconeGlove3 = cv2.imread("Glove_images/silicone/mould/mould_3.jpeg")
+fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
+fabricGlove2 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains2.jpg")
 fabricGlove1 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains1.jpg")
 fabricGlove2 = cv2.imread("Glove_images/fabric/multiple_stains/multiple_stains2.jpg")
 
