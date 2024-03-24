@@ -110,3 +110,89 @@ def get_hsv_range_with_morphological_operations(img):
 
 # get_hsv_range_with_morphological_operations(nitrileGlove5)
 # get_hsv_range_with_morphological_operations(nitrileGlove6)
+
+def onTrackbarChange(value):
+    pass
+
+def detectGloveTrackbar(img):
+    cv2.namedWindow("Trackbars", cv2.WINDOW_NORMAL)  # Set window to allow resizing
+
+    # Adjust the size of the trackbar window to match the image size
+    trackbar_width = 400
+    trackbar_height = img.shape[0] + 50  # Add extra height for trackbar labels
+    cv2.resizeWindow("Trackbars", trackbar_width, trackbar_height)
+
+    # Create trackbars for adjusting HSV color ranges
+    cv2.createTrackbar("Hue Lower", "Trackbars", 0, 180, onTrackbarChange)
+    cv2.createTrackbar("Hue Upper", "Trackbars", 180, 180, onTrackbarChange)
+    cv2.createTrackbar("Saturation Lower", "Trackbars", 0, 255, onTrackbarChange)
+    cv2.createTrackbar("Saturation Upper", "Trackbars", 255, 255, onTrackbarChange)
+    cv2.createTrackbar("Value Lower", "Trackbars", 0, 255, onTrackbarChange)
+    cv2.createTrackbar("Value Upper", "Trackbars", 255, 255, onTrackbarChange)
+    cv2.createTrackbar("Threshold", "Trackbars", 127, 255, onTrackbarChange)
+    cv2.createTrackbar("Min Contour Area", "Trackbars", 100, 5000, onTrackbarChange)
+    cv2.createTrackbar("Gaussian Blur", "Trackbars", 0, 10, onTrackbarChange)
+
+    while True:
+        # Get current trackbar positions
+        hue_lower = cv2.getTrackbarPos("Hue Lower", "Trackbars")
+        hue_upper = cv2.getTrackbarPos("Hue Upper", "Trackbars")
+        saturation_lower = cv2.getTrackbarPos("Saturation Lower", "Trackbars")
+        saturation_upper = cv2.getTrackbarPos("Saturation Upper", "Trackbars")
+        value_lower = cv2.getTrackbarPos("Value Lower", "Trackbars")
+        value_upper = cv2.getTrackbarPos("Value Upper", "Trackbars")
+        threshold_value = cv2.getTrackbarPos("Threshold", "Trackbars")
+        min_contour_area = cv2.getTrackbarPos("Min Contour Area", "Trackbars")
+        blur_value = cv2.getTrackbarPos("Gaussian Blur", "Trackbars") * 2 + 1
+
+        # Convert image to HSV color space
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        # Define color range based on trackbar positions
+        lower = np.array([hue_lower, saturation_lower, value_lower])
+        upper = np.array([hue_upper, saturation_upper, value_upper])
+
+        print("lower :", lower)
+        print("upper :", upper)
+        print("threshold:", threshold_value)
+        print("area:", min_contour_area)
+        print("Blur: ", blur_value)
+        # Create a mask for the selected color range
+        mask = cv2.inRange(hsv, lower, upper)
+
+        # Apply Gaussian blur
+        mask = cv2.GaussianBlur(mask, (blur_value, blur_value), 0)
+
+        # Apply thresholding to create a binary mask
+        _, mask = cv2.threshold(mask, threshold_value, 255, cv2.THRESH_BINARY)
+
+        # Apply morphological operations to remove noise
+        kernel = np.ones((3, 3), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
+
+        # Find contours in the mask
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+
+        # Create a copy of the original image
+        img_copy = img.copy()
+
+
+
+        # Filter contours by minimum area
+        contours = [contour for contour in contours if cv2.contourArea(contour) > min_contour_area]
+
+        # Draw contours
+        cv2.drawContours(img_copy, contours, -1, (0, 255, 0), 2)
+
+        cv2.putText(img_copy, "Number of contor :" + str(len(contours)), (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
+                    1, (255, 0, 0), 2, cv2.LINE_AA)
+        # Display the result
+        cv2.imshow("Glove Defects", img_copy)
+
+        # Break the loop when 'q' key is pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # Destroy all windows
+    cv2.destroyAllWindows()
