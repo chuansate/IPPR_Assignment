@@ -54,48 +54,49 @@ def identifyDefectType_MedicalGlove_HelperFunc(img):
 def main():
     # identification of glove type
     ## medical gloves
-    identifyGloveType(medicalGlove1, totalGloveType)
-    identifyGloveType(medicalGlove2, totalGloveType)
-    identifyGloveType(medicalGlove3, totalGloveType)
-    identifyGloveType(medicalGlove4, totalGloveType)
-    identifyGloveType(medicalGlove5, totalGloveType)
-    identifyGloveType(medicalGlove6, totalGloveType)
+    print(identifyGloveType(medicalGlove1, totalGloveType))
+    print(identifyGloveType(medicalGlove2, totalGloveType))
+    print(identifyGloveType(medicalGlove3, totalGloveType))
+    print(identifyGloveType(medicalGlove4, totalGloveType))
+    print(identifyGloveType(medicalGlove5, totalGloveType))
+    print(identifyGloveType(medicalGlove6, totalGloveType))
     ## fabric gloves
-    identifyGloveType(fabricGlove1, totalGloveType)
-    identifyGloveType(fabricGlove2, totalGloveType)
-    identifyGloveType(fabricGlove3, totalGloveType)
-    identifyGloveType(fabricGlove4, totalGloveType)
-    identifyGloveType(fabricGlove5, totalGloveType)
-    identifyGloveType(fabricGlove6, totalGloveType)
+    print(identifyGloveType(fabricGlove1, totalGloveType))
+    print(identifyGloveType(fabricGlove2, totalGloveType))
+    print(identifyGloveType(fabricGlove3, totalGloveType))
+    print(identifyGloveType(fabricGlove4, totalGloveType))
+    print(identifyGloveType(fabricGlove5, totalGloveType))
+    print(identifyGloveType(fabricGlove6, totalGloveType))
 
     ## silicone gloves
-    identifyGloveType(siliconeGlove1, totalGloveType)
-    identifyGloveType(siliconeGlove2, totalGloveType)
-    identifyGloveType(siliconeGlove3, totalGloveType)
-    identifyGloveType(siliconeGlove4, totalGloveType)
-    identifyGloveType(siliconeGlove5, totalGloveType)
-    identifyGloveType(siliconeGlove6, totalGloveType)
-    identifyGloveType(siliconeGlove7, totalGloveType)
-    identifyGloveType(siliconeGlove8, totalGloveType)
-    identifyGloveType(siliconeGlove9, totalGloveType)
-    identifyGloveType(siliconeGlove10, totalGloveType)
-    identifyGloveType(siliconeGlove11, totalGloveType)
-    identifyGloveType(siliconeGlove12, totalGloveType)
-    identifyGloveType(siliconeGlove13, totalGloveType)
-    identifyGloveType(siliconeGlove14, totalGloveType)
-    identifyGloveType(siliconeGlove15, totalGloveType)
+    print(identifyGloveType(siliconeGlove1, totalGloveType))
+    print(identifyGloveType(siliconeGlove2, totalGloveType))
+    print(identifyGloveType(siliconeGlove3, totalGloveType))
+    print(identifyGloveType(siliconeGlove4, totalGloveType))
+    print(identifyGloveType(siliconeGlove5, totalGloveType))
+    print(identifyGloveType(siliconeGlove6, totalGloveType))
+    print(identifyGloveType(siliconeGlove7, totalGloveType))
+    print(identifyGloveType(siliconeGlove8, totalGloveType))
+    print(identifyGloveType(siliconeGlove9, totalGloveType))
+    print(identifyGloveType(siliconeGlove10, totalGloveType))
+    print(identifyGloveType(siliconeGlove11, totalGloveType))
+    print(identifyGloveType(siliconeGlove12, totalGloveType))
+    print(identifyGloveType(siliconeGlove13, totalGloveType))
+    print(identifyGloveType(siliconeGlove14, totalGloveType))
+    print(identifyGloveType(siliconeGlove15, totalGloveType))
 
     ## nitrile gloves
-    identifyGloveType(nitrileGlove1, totalGloveType)
-    identifyGloveType(nitrileGlove2, totalGloveType)
-    identifyGloveType(nitrileGlove3, totalGloveType)
-    identifyGloveType(nitrileGlove4, totalGloveType)
-    identifyGloveType(nitrileGlove5, totalGloveType)
-    identifyGloveType(nitrileGlove6, totalGloveType)
-    identifyGloveType(nitrileGlove7, totalGloveType)
-    identifyGloveType(nitrileGlove8, totalGloveType)
-    identifyGloveType(nitrileGlove9, totalGloveType)
-    identifyGloveType(nitrileGlove10, totalGloveType)
+    print(identifyGloveType(nitrileGlove1, totalGloveType))
+    print(identifyGloveType(nitrileGlove2, totalGloveType))
+    print(identifyGloveType(nitrileGlove3, totalGloveType))
+    print(identifyGloveType(nitrileGlove4, totalGloveType))
+    print(identifyGloveType(nitrileGlove5, totalGloveType))
+    print(identifyGloveType(nitrileGlove6, totalGloveType))
+    print(identifyGloveType(nitrileGlove7, totalGloveType))
+    print(identifyGloveType(nitrileGlove8, totalGloveType))
+    print(identifyGloveType(nitrileGlove9, totalGloveType))
+    print(identifyGloveType(nitrileGlove10, totalGloveType))
+    print("Identification of glove type ends here!")
 
     # identification of defect types
     ## medical glove
@@ -107,37 +108,21 @@ def main():
     identifyDefectType_MedicalGlove_HelperFunc(medicalGlove6)
 
     # silicone glove
-    print(identifyGloveType(siliconeGlove1, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove1)
-    print(identifyGloveType(siliconeGlove2, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove2)
-    print(identifyGloveType(siliconeGlove3, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove3)
-    print(identifyGloveType(siliconeGlove4, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove4)
-    print(identifyGloveType(siliconeGlove5, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove5)
-    print(identifyGloveType(siliconeGlove6, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove6)
-    print(identifyGloveType(siliconeGlove7, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove7)
-    print(identifyGloveType(siliconeGlove8, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove8)
-    print(identifyGloveType(siliconeGlove9, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove9)
-    print(identifyGloveType(siliconeGlove10, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove10)
-    print(identifyGloveType(siliconeGlove11, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove11)
-    print(identifyGloveType(siliconeGlove12, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove12)
-    print(identifyGloveType(siliconeGlove13, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove13)
-    print(identifyGloveType(siliconeGlove14, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove14)
-    print(identifyGloveType(siliconeGlove15, totalGloveType))
     identifyDefectType_SiliconeGlove(siliconeGlove15)
-
 
     # fabric glove
     identifyDefectType_FabricGlove(fabricGlove1, 120, 1300, 1400)
@@ -148,40 +133,22 @@ def main():
     identifyDefectType_FabricGlove(fabricGlove6, 60, 100, 200)
 
     # nitrile glove
-    gloveTypeName7 = identifyGloveType_nitrile(nitrileGlove1, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove1, gloveTypeName7)
-
-    gloveTypeName8 = identifyGloveType_nitrile(nitrileGlove2, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove2, gloveTypeName8)
-
-    gloveTypeName9 = identifyGloveType_nitrile(nitrileGlove3, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove3, gloveTypeName9)
-
-    gloveTypeName10 = identifyGloveType_nitrile(nitrileGlove4, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove4, gloveTypeName10)
-
-    gloveTypeName11 = identifyGloveType_nitrile(nitrileGlove5, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove5, gloveTypeName11)
-
-    gloveTypeName12 = identifyGloveType_nitrile(nitrileGlove6, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove6, gloveTypeName12)
-
-    gloveTypeName13 = identifyGloveType_nitrile(nitrileGlove7, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove7, gloveTypeName13)
-
-    gloveTypeName14 = identifyGloveType_nitrile(nitrileGlove8, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove8, gloveTypeName14)
-
-    gloveTypeName15 = identifyGloveType_nitrile(nitrileGlove9, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove9, gloveTypeName15)
-
-    gloveTypeName16 = identifyGloveType_nitrile(nitrileGlove10, totalGloveType_nitrile)
-    identifyDefectType(nitrileGlove10, gloveTypeName16)
+    identifyDefectTypes_NitrileGlove(nitrileGlove1)
+    identifyDefectTypes_NitrileGlove(nitrileGlove2)
+    identifyDefectTypes_NitrileGlove(nitrileGlove3)
+    identifyDefectTypes_NitrileGlove(nitrileGlove4)
+    identifyDefectTypes_NitrileGlove(nitrileGlove5)
+    identifyDefectTypes_NitrileGlove(nitrileGlove6)
+    identifyDefectTypes_NitrileGlove(nitrileGlove7)
+    identifyDefectTypes_NitrileGlove(nitrileGlove8)
+    identifyDefectTypes_NitrileGlove(nitrileGlove9)
+    identifyDefectTypes_NitrileGlove(nitrileGlove10)
 
 
 def main_GUI():
     # 2 buttons: identify the glove type, and identify the defect type
     pass
+
 
 if __name__ == "__main__":
     main()
