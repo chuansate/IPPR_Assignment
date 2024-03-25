@@ -4,7 +4,6 @@ Algorithms to process the images
 import cv2
 import numpy as np
 
-
 def colourProfiles(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
@@ -31,34 +30,53 @@ def colourProfiles(n):
 
     return name, hsv_lower, hsv_upper
 
-def HSVRangeForDefectDetectionSiliconGlove(n):
-    if n == 1:
-        name = "mark detection"
-        hue_lower = 0
-        hue_upper = 180
-        saturation_lower = 0
-        saturation_upper = 30
-        value_lower = 0
-        value_upper = 30
-        threshold = 0
-        min_contour_area = 100
-        blur_value = (5) * 2+1
+def identifyGloveType(img, totalGloveType):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    gloveTypeNames = []
+    gloveTypeContourCounts = []
+    gloveTypeContourAreas = []
+    for gloveTypeIndex in range(totalGloveType):
+        gloveName, hsv_lower, hsv_higher = colourProfiles(gloveTypeIndex)
+        gloveTypeNames.append(gloveName)
+        # create a binary mask where: wanted parts are in white, unwanted parts are in black
+        mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
+        kernel = np.ones((3, 3), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
+        contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # -1 signifies drawing all contours
+        gloveTypeContourCounts.append(len(contours))
+        if len(contours) != 0:
+            cnt = contours[0]
+            gloveTypeContourAreas.append(cv2.contourArea(cnt))
+        else:
+            gloveTypeContourAreas.append(0)
+        imgCopy = img.copy()
+        cv2.drawContours(imgCopy, contours, -1, (0, 255, 0), 3)
 
-    elif n == 2:
-        name = "mould detection"
-        hue_lower = 18
-        hue_upper = 63
-        saturation_lower = 50
-        saturation_upper = 80
-        value_lower = 95
-        value_upper = 148
-        threshold = 0
-        min_contour_area = 500
-        blur_value = (4) * 2+1
+    countOf1 = 0
+    indexesOf1_gloveTypeContourCounts = []
+    # if there is a 1 only in gloveTypeContourCounts, return the index!
+    for i, count in enumerate(gloveTypeContourCounts):
+        if count == 1:
+            countOf1 = countOf1 + 1
+            indexesOf1_gloveTypeContourCounts.append(i)
+    # if there are multiple 1 in gloveTypeContourCounts, compare the areas and return the index with largest areas!
+    if countOf1 > 1:
+        # compute the areas and return the index with largest areas
+        contourAreas = []
+        for index in indexesOf1_gloveTypeContourCounts:
+            contourAreas.append(gloveTypeContourAreas[index])
+        return gloveTypeNames[contourAreas.index(max(contourAreas))]
+    elif countOf1 == 1:
+        return gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]]
+    else: # there is no 1 in `gloveTypeContourCounts`
+    # else return the index with least gloveTypeContourCounts but greater than 0
+        for i, count in enumerate(gloveTypeContourCounts):
+            if count == 0:
+                gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
+        return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
 
-    return name, hue_lower, hue_upper, saturation_lower, saturation_upper, value_lower, value_upper, threshold, min_contour_area, blur_value
-
-def calculate_shape_factor(contour):
+def calculateShapeFactor_FabricGlove(contour):
     area = cv2.contourArea(contour)
     perimeter = cv2.arcLength(contour, True)
     shape_factor = (perimeter ** 2) / (4 * np.pi * area)
@@ -184,7 +202,7 @@ def identifyDefectType_MedicalGlove(img, minDirtyArea, maxDirtyArea, minPartialT
     else:
         return "Unknown defect type"
 
-def ColourProfile(n):
+def ColourProfile_NitrileGlove(n):
     # to get `hsv_lower` and `hsv_upper`, `get_hsv_range()` from `tuning_utils.py` is used
     if n == 0:
         name = "nitrile glove"
@@ -193,6 +211,51 @@ def ColourProfile(n):
 
     return name, hsv_lower, hsv_upper
 
+def identifyGloveType_Nitrile(img, totalGloveType_nitrile):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    gloveTypeNames = []
+    gloveTypeContourCounts = []
+    gloveTypeContourAreas = []
+    for gloveTypeIndex in range(totalGloveType_nitrile):
+        gloveName, hsv_lower, hsv_higher = ColourProfile(gloveTypeIndex)
+        gloveTypeNames.append(gloveName)
+        # create a binary mask where: wanted parts are in white, unwanted parts are in black
+        mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
+        kernel = np.ones((3, 3), np.uint8)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
+        contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # -1 signifies drawing all contours
+        gloveTypeContourCounts.append(len(contours))
+        if len(contours) != 0:
+            cnt = contours[0]
+            gloveTypeContourAreas.append(cv2.contourArea(cnt))
+        else:
+            gloveTypeContourAreas.append(0)
+        imgCopy = img.copy()
+        cv2.drawContours(imgCopy, contours, -1, (0, 255, 0), 3)
+
+    countOf1 = 0
+    indexesOf1_gloveTypeContourCounts = []
+    # if there is a 1 only in gloveTypeContourCounts, return the index!
+    for i, count in enumerate(gloveTypeContourCounts):
+        if count == 1:
+            countOf1 = countOf1 + 1
+            indexesOf1_gloveTypeContourCounts.append(i)
+    # if there are multiple 1 in gloveTypeContourCounts, compare the areas and return the index with largest areas!
+    if countOf1 > 1:
+        # compute the areas and return the index with largest areas
+        contourAreas = []
+        for index in indexesOf1_gloveTypeContourCounts:
+            contourAreas.append(gloveTypeContourAreas[index])
+        return gloveTypeNames[contourAreas.index(max(contourAreas))]
+    elif countOf1 == 1:
+        return gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]]
+    else: # there is no 1 in `gloveTypeContourCounts`
+    # else return the index with least gloveTypeContourCounts but greater than 0
+        for i, count in enumerate(gloveTypeContourCounts):
+            if count == 0:
+                gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
+        return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
 
 def identifyDefectTypes_NitrileGlove(img):
     # Preprocessing the image
@@ -245,57 +308,37 @@ def identifyDefectTypes_NitrileGlove(img):
                 # Draw the contour that is identified as a fingertip hole
                 cv2.drawContours(img, [contour], -1, (0, 255, 0), 3)
                 cv2.imshow('Detected FingerTip Hole Defects', img)
-
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-def identifyGloveType(img, totalGloveType):
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    gloveTypeNames = []
-    gloveTypeContourCounts = []
-    gloveTypeContourAreas = []
-    for gloveTypeIndex in range(totalGloveType):
-        gloveName, hsv_lower, hsv_higher = colourProfiles(gloveTypeIndex)
-        gloveTypeNames.append(gloveName)
-        # create a binary mask where: wanted parts are in white, unwanted parts are in black
-        mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
-        kernel = np.ones((3, 3), np.uint8)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
-        contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        # -1 signifies drawing all contours
-        gloveTypeContourCounts.append(len(contours))
-        if len(contours) != 0:
-            cnt = contours[0]
-            gloveTypeContourAreas.append(cv2.contourArea(cnt))
-        else:
-            gloveTypeContourAreas.append(0)
-        imgCopy = img.copy()
-        cv2.drawContours(imgCopy, contours, -1, (0, 255, 0), 3)
+def HSVRangeForDefectDetection_SiliconGlove(n):
+    if n == 1:
+        name = "mark detection"
+        hue_lower = 0
+        hue_upper = 180
+        saturation_lower = 0
+        saturation_upper = 30
+        value_lower = 0
+        value_upper = 30
+        threshold = 0
+        min_contour_area = 100
+        blur_value = (5) * 2+1
 
-    countOf1 = 0
-    indexesOf1_gloveTypeContourCounts = []
-    # if there is a 1 only in gloveTypeContourCounts, return the index!
-    for i, count in enumerate(gloveTypeContourCounts):
-        if count == 1:
-            countOf1 = countOf1 + 1
-            indexesOf1_gloveTypeContourCounts.append(i)
-    # if there are multiple 1 in gloveTypeContourCounts, compare the areas and return the index with largest areas!
-    if countOf1 > 1:
-        # compute the areas and return the index with largest areas
-        contourAreas = []
-        for index in indexesOf1_gloveTypeContourCounts:
-            contourAreas.append(gloveTypeContourAreas[index])
-        return gloveTypeNames[contourAreas.index(max(contourAreas))]
-    elif countOf1 == 1:
-        return gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]]
-    else: # there is no 1 in `gloveTypeContourCounts`
-    # else return the index with least gloveTypeContourCounts but greater than 0
-        for i, count in enumerate(gloveTypeContourCounts):
-            if count == 0:
-                gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
-        return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
+    elif n == 2:
+        name = "mould detection"
+        hue_lower = 18
+        hue_upper = 63
+        saturation_lower = 50
+        saturation_upper = 80
+        value_lower = 95
+        value_upper = 148
+        threshold = 0
+        min_contour_area = 500
+        blur_value = (4) * 2+1
 
-def detectGloveDefects(img):
+    return name, hue_lower, hue_upper, saturation_lower, saturation_upper, value_lower, value_upper, threshold, min_contour_area, blur_value
+
+def detectGloveDefects_SiliconeGlove(img):
     # Convert image to HSV color space
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mould_defect = False
@@ -355,8 +398,7 @@ def detectGloveDefects(img):
 
     return mould_defect, mark_defect, missing_fingers, img_copy
 
-
-def detectGloveDefectType(img):
+def detectGloveDefectType_SiliconeGlove(img):
     mould_defect, mark_defect, missing_fingers, img_copy = detectGloveDefects(img)
     if mould_defect:
         print("The defect identified is mould found in glove")
@@ -378,48 +420,4 @@ def detectGloveDefectType(img):
                     1, (255, 0, 0), 2, cv2.LINE_AA)
         # Display the result
         cv2.imshow("missing Finger Defect", img_copy)
-        cv2.waitKey(0)def identifyGloveType_nitrile(img, totalGloveType_nitrile):
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    gloveTypeNames = []
-    gloveTypeContourCounts = []
-    gloveTypeContourAreas = []
-    for gloveTypeIndex in range(totalGloveType_nitrile):
-        gloveName, hsv_lower, hsv_higher = ColourProfile(gloveTypeIndex)
-        gloveTypeNames.append(gloveName)
-        # create a binary mask where: wanted parts are in white, unwanted parts are in black
-        mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
-        kernel = np.ones((3, 3), np.uint8)
-        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=2)
-        contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        # -1 signifies drawing all contours
-        gloveTypeContourCounts.append(len(contours))
-        if len(contours) != 0:
-            cnt = contours[0]
-            gloveTypeContourAreas.append(cv2.contourArea(cnt))
-        else:
-            gloveTypeContourAreas.append(0)
-        imgCopy = img.copy()
-        cv2.drawContours(imgCopy, contours, -1, (0, 255, 0), 3)
-
-    countOf1 = 0
-    indexesOf1_gloveTypeContourCounts = []
-    # if there is a 1 only in gloveTypeContourCounts, return the index!
-    for i, count in enumerate(gloveTypeContourCounts):
-        if count == 1:
-            countOf1 = countOf1 + 1
-            indexesOf1_gloveTypeContourCounts.append(i)
-    # if there are multiple 1 in gloveTypeContourCounts, compare the areas and return the index with largest areas!
-    if countOf1 > 1:
-        # compute the areas and return the index with largest areas
-        contourAreas = []
-        for index in indexesOf1_gloveTypeContourCounts:
-            contourAreas.append(gloveTypeContourAreas[index])
-        return gloveTypeNames[contourAreas.index(max(contourAreas))]
-    elif countOf1 == 1:
-        return gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]]
-    else: # there is no 1 in `gloveTypeContourCounts`
-    # else return the index with least gloveTypeContourCounts but greater than 0
-        for i, count in enumerate(gloveTypeContourCounts):
-            if count == 0:
-                gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
-        return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
+        cv2.waitKey(0)
