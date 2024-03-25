@@ -55,6 +55,7 @@ def identifyGloveType(img, totalGloveType):
 
     countOf1 = 0
     indexesOf1_gloveTypeContourCounts = []
+    RED = (0, 0, 255)
     # if there is a 1 only in gloveTypeContourCounts, return the index!
     for i, count in enumerate(gloveTypeContourCounts):
         if count == 1:
@@ -66,14 +67,31 @@ def identifyGloveType(img, totalGloveType):
         contourAreas = []
         for index in indexesOf1_gloveTypeContourCounts:
             contourAreas.append(gloveTypeContourAreas[index])
+        cv2.putText(img, 'Glove Type = ' + gloveTypeNames[contourAreas.index(max(contourAreas))], (10, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7, RED, 2, cv2.LINE_AA)
+        cv2.imshow("Identification of glove type", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         return gloveTypeNames[contourAreas.index(max(contourAreas))]
     elif countOf1 == 1:
+        cv2.putText(img, 'Glove Type = ' + gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]], (10, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7, RED, 2, cv2.LINE_AA)
+        cv2.imshow("Identification of glove type", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         return gloveTypeNames[indexesOf1_gloveTypeContourCounts[0]]
     else: # there is no 1 in `gloveTypeContourCounts`
     # else return the index with least gloveTypeContourCounts but greater than 0
         for i, count in enumerate(gloveTypeContourCounts):
             if count == 0:
                 gloveTypeContourCounts[i] = max(gloveTypeContourCounts) + 1
+        cv2.putText(img, 'Glove Type = ' + gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))], (10, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7, RED, 2, cv2.LINE_AA)
+        cv2.imshow("Identification of glove type", img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         return gloveTypeNames[gloveTypeContourCounts.index(min(gloveTypeContourCounts))]
 
 def calculateShapeFactor_FabricGlove(contour):
