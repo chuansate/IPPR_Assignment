@@ -94,7 +94,7 @@ def identifyDefectType_FabricGlove(image, thresh, minDefect, maxDefect):
     shape_factor = 0
     print('Number of defects:', num_defects)
     for defect in filtered_contours:
-        shape_factor = calculate_shape_factor(defect)
+        shape_factor = calculateShapeFactor_FabricGlove(defect)
         print('Shape factor:', shape_factor)
         cv2.drawContours(image, [defect], -1, (0,255,0), 3)
 
@@ -217,7 +217,7 @@ def identifyGloveType_Nitrile(img, totalGloveType_nitrile):
     gloveTypeContourCounts = []
     gloveTypeContourAreas = []
     for gloveTypeIndex in range(totalGloveType_nitrile):
-        gloveName, hsv_lower, hsv_higher = ColourProfile(gloveTypeIndex)
+        gloveName, hsv_lower, hsv_higher = ColourProfile_NitrileGlove(gloveTypeIndex)
         gloveTypeNames.append(gloveName)
         # create a binary mask where: wanted parts are in white, unwanted parts are in black
         mask = cv2.inRange(hsv, hsv_lower, hsv_higher)
@@ -263,7 +263,7 @@ def identifyDefectTypes_NitrileGlove(img):
     hsv_img = cv2.cvtColor(blurred_img, cv2.COLOR_BGR2HSV)
 
     # Define the range for the color of the glove in HSV
-    gloveName, hsv_lower, hsv_upper = ColourProfile(0)
+    gloveName, hsv_lower, hsv_upper = ColourProfile_NitrileGlove(0)
 
     # Define the range for the color of the stains in HSV
     lower_hsv_stain = np.array([63, 85, 81])
@@ -311,7 +311,7 @@ def identifyDefectTypes_NitrileGlove(img):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-def HSVRangeForDefectDetection_SiliconGlove(n):
+def HSVRangeForDefectDetection_SiliconeGlove(n):
     if n == 1:
         name = "mark detection"
         hue_lower = 0
@@ -345,7 +345,7 @@ def detectGloveDefects_SiliconeGlove(img):
     mark_defect = False
     missing_fingers = False
     for i in range(1,3):
-        name, hue_lower, hue_upper, saturation_lower, saturation_upper, value_lower, value_upper, threshold_value, min_contour_area, blur_value = HSVRangeForDefectDetectionSiliconGlove(i)
+        name, hue_lower, hue_upper, saturation_lower, saturation_upper, value_lower, value_upper, threshold_value, min_contour_area, blur_value = HSVRangeForDefectDetection_SiliconeGlove(i)
 
         lower = np.array([hue_lower, saturation_lower, value_lower])
         upper = np.array([hue_upper, saturation_upper, value_upper])
@@ -374,15 +374,6 @@ def detectGloveDefects_SiliconeGlove(img):
 
         cv2.drawContours(img_copy, contours, -1, (0, 255, 0), 2)
 
-        # cv2.imshow("Result Image", img_copy)
-        # cv2.waitKey(0)
-        # print(contours)
-        # print("lower :", lower)
-        # print("upper :", upper)
-        # print("threshold:", threshold_value)
-        # print("area:", min_contour_area)
-        # print("Blur: ", blur_value)
-
         if len(contours) == 1 and i == 2:
             # Draw contours for pink glove, black marks, and green mold
             cv2.drawContours(img_copy, contours, -1, (0, 255, 0), 2)
@@ -398,8 +389,8 @@ def detectGloveDefects_SiliconeGlove(img):
 
     return mould_defect, mark_defect, missing_fingers, img_copy
 
-def detectGloveDefectType_SiliconeGlove(img):
-    mould_defect, mark_defect, missing_fingers, img_copy = detectGloveDefects(img)
+def identifyDefectType_SiliconeGlove(img):
+    mould_defect, mark_defect, missing_fingers, img_copy = detectGloveDefects_SiliconeGlove(img)
     if mould_defect:
         print("The defect identified is mould found in glove")
         cv2.putText(img_copy, "Defect = Mould found on glove", (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
@@ -407,6 +398,7 @@ def detectGloveDefectType_SiliconeGlove(img):
         # Display the result
         cv2.imshow("mould Defect", img_copy)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
     elif mark_defect:
         print("The defect identified is mark found in glove")
         cv2.putText(img_copy, "Defect = Mark found on glove", (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
@@ -414,6 +406,8 @@ def detectGloveDefectType_SiliconeGlove(img):
         # Display the result
         cv2.imshow("mark Defect", img_copy)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
     else:
         print("The defect identified is missing fingers in glove")
         cv2.putText(img_copy, "Defect = Missing fingers in glove", (30, 80), cv2.FONT_HERSHEY_SIMPLEX,
@@ -421,3 +415,4 @@ def detectGloveDefectType_SiliconeGlove(img):
         # Display the result
         cv2.imshow("missing Finger Defect", img_copy)
         cv2.waitKey(0)
+        cv2.destroyAllWindows()
